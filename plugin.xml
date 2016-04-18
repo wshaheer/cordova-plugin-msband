@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  id="cordova-plugin-msband"
+  version="0.0.1">
+  <name>MSBand</name>
+  <description>Plugin for Microsoft Band</description>
+  <license>Apache 2.0</license>
+  <keywords>cordova,microsoft-band</keywords>
+  <js-module src="www/msband.js" name="MSBand">
+    <clobbers target="msband" />
+  </js-module>
+  <platform name="android">
+    <config-file target="res/xml/config.xml" parent="/*">
+      <feature name="MSBandPlugin">
+        <param name="android-package" value="com.sensauratech.msband.MSBandPlugin" />
+      </feature>
+    </config-file>
+    <source-file src="src/android/MSBandPlugin.java" target-dir="src/com/sensauratech/msband" />
+    <source-file src="src/android/microsoft-band.jar" target-dir="libs"/>
+    <config-file target="AndroidManifest.xml" parent="/*">
+      <uses-permission android:name="android.permission.BLUETOOTH" />
+      <uses-permission android:name="com.microsoft.band.services.access.BIND_BAND_SERVICE" />
+    </config-file>
+  </platform>
+  <platform name="ios">
+    <config-file target="config.xml" parent="/*">
+      <feature name="MSBandPlugin">
+        <param name="ios-package" value="MSBandPlugin" />
+      </feature>
+    </config-file>
+    <header-file src="src/ios/MSBandPlugin.h" />
+    <source-file src="src/ios/MSBandPlugin.m" />
+    <framework src="src/ios/MicrosoftBandKit_iOS.framework" custom="true" />
+  </platform>
+</plugin>

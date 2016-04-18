@@ -1,0 +1,29 @@
+{
+  "name": "CordovaMicrosoftBand",
+  "version": "0.0.1",
+  "description": "Plugin for Microsoft Band",
+  "cordova": {
+    "id": "cordova-plugin-msband",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wshaheer/cordova-plugin-msband.git"
+  },
+  "keywords": [
+    "cordova",
+    "microsoft-band",
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios"
+  ],
+  "author": "Walid Mahbub Shaheer",
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/wshaheer/cordova-plugin-msband/issues"
+  },
+  "homepage": "https://github.com/wshaheer/cordova-plugin-msband#readme"
+}
