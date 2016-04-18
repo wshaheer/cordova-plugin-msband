@@ -1,5 +1,5 @@
 {
-  "name": "CordovaMicrosoftBand",
+  "name": "cordova-plugin-msband",
   "version": "0.0.1",
   "description": "Plugin for Microsoft Band",
   "cordova": {
