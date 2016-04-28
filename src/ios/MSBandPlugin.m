@@ -80,7 +80,7 @@
   }
 }
 
-- (void) getContactState:(CDVInvokedUrlCommand *)command
+- (void) contact:(CDVInvokedUrlCommand *)command
 {
   if (self.client.isDeviceConnected)
   {
@@ -106,7 +106,7 @@
   }
 }
 
-- (void) getConsent:(CDVInvokedUrlCommand *)command
+- (void) consent:(CDVInvokedUrlCommand *)command
 {
   if (self.client.isDeviceConnected)
   {

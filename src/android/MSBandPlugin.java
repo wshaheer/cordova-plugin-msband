@@ -46,7 +46,7 @@ public class MSBandPlugin extends CordovaPlugin {
     if (action.equals("initialize")) {
       cordova.getThreadPool().execute(new Runnable() {
         public void run() {
-          initializeAction(args, callbackContext);
+          initialize(args, callbackContext);
         }
       });
 
@@ -54,7 +54,7 @@ public class MSBandPlugin extends CordovaPlugin {
     } else if (action.equals("connect")) {
       cordova.getThreadPool().execute(new Runnable() {
         public void run() {
-          connectAction(args, callbackContext);
+          connect(args, callbackContext);
         }
       });
 
@@ -62,23 +62,23 @@ public class MSBandPlugin extends CordovaPlugin {
     } else if (action.equals("disconnect")) {
       cordova.getThreadPool().execute(new Runnable() {
         public void run() {
-          disconnectAction(args, callbackContext);
+          disconnect(args, callbackContext);
         }
       });
 
       return true;
-    } else if (action.equals("getContactState")) {
+    } else if (action.equals("contact")) {
       cordova.getThreadPool().execute(new Runnable() {
         public void run() {
-          getContactStateAction(args, callbackContext);
+          contact(args, callbackContext);
         }
       });
 
       return true;
-    } else if (action.equals("getConsent")) {
+    } else if (action.equals("consent")) {
       cordova.getThreadPool().execute(new Runnable() {
         public void run() {
-          getConsentAction(args, callbackContext);
+          consent(args, callbackContext);
         }
       });
 
@@ -86,7 +86,7 @@ public class MSBandPlugin extends CordovaPlugin {
     } else if (action.equals("subscribe")) {
       cordova.getThreadPool().execute(new Runnable() {
         public void run() {
-          subscribeAction(args, callbackContext);
+          subscribe(args, callbackContext);
         }
       });
 
@@ -94,7 +94,7 @@ public class MSBandPlugin extends CordovaPlugin {
     } else if (action.equals("unsubscribe")) {
       cordova.getThreadPool().execute(new Runnable() {
         public void run() {
-          unsubscribeAction(args, callbackContext);
+          unsubscribe(args, callbackContext);
         }
       });
 
@@ -102,7 +102,7 @@ public class MSBandPlugin extends CordovaPlugin {
     } else if (action.equals("isConnected")) {
       cordova.getThreadPool().execute(new Runnable() {
         public void run() {
-          isConnectedAction(args, callbackContext);
+          isConnected(args, callbackContext);
         }
       });
 
@@ -112,7 +112,7 @@ public class MSBandPlugin extends CordovaPlugin {
     return false;
   }
 
-  protected void initializeAction(JSONArray args, CallbackContext callbackContext) {
+  protected void initialize(JSONArray args, CallbackContext callbackContext) {
     this.device = BandClientManager.getInstance().getPairedBands()[0];
     this.bandClient = BandClientManager.getInstance().create(cordova.getActivity(), this.device);
     JSONObject obj = new JSONObject();
@@ -127,7 +127,7 @@ public class MSBandPlugin extends CordovaPlugin {
     }
   }
 
-  protected void connectAction(JSONArray args, final CallbackContext callbackContext) {
+  protected void connect(JSONArray args, final CallbackContext callbackContext) {
     this.bandClient.registerConnectionCallback(new BandConnectionCallback() {
       @Override
       public void onStateChanged(ConnectionState state) {
@@ -155,7 +155,7 @@ public class MSBandPlugin extends CordovaPlugin {
     }
   }
 
-  protected void disconnectAction(JSONArray args, CallbackContext callbackContext) {
+  protected void disconnect(JSONArray args, CallbackContext callbackContext) {
     JSONObject obj = new JSONObject();
     if (this.bandClient.getConnectionState() == ConnectionState.CONNECTED) {
       try {
@@ -171,7 +171,7 @@ public class MSBandPlugin extends CordovaPlugin {
     }
   }
 
-  protected void getContactStateAction(JSONArray args, final CallbackContext callbackContext) {
+  protected void contact(JSONArray args, final CallbackContext callbackContext) {
     if (this.bandClient.getConnectionState() == ConnectionState.CONNECTED) {
       try {
         this.bandClient.getSensorManager().registerContactEventListener(new BandContactEventListener() {
@@ -194,7 +194,7 @@ public class MSBandPlugin extends CordovaPlugin {
     }
   }
 
-  protected void getConsentAction(JSONArray args, final CallbackContext callbackContext) {
+  protected void consent(JSONArray args, final CallbackContext callbackContext) {
     if (this.bandClient.getConnectionState() == ConnectionState.CONNECTED) {
       if (this.bandClient.getSensorManager().getCurrentHeartRateConsent() == UserConsent.GRANTED) {
         try {
@@ -223,7 +223,7 @@ public class MSBandPlugin extends CordovaPlugin {
     }
   }
 
-  protected void subscribeAction(final JSONArray args, final CallbackContext callbackContext) {
+  protected void subscribe(final JSONArray args, final CallbackContext callbackContext) {
     if (this.bandClient.getConnectionState() == ConnectionState.CONNECTED) {
       try {
         if (args.getString(0).equals("HEART_RATE")) {
@@ -311,7 +311,7 @@ public class MSBandPlugin extends CordovaPlugin {
     }
   }
 
-  protected void unsubscribeAction(JSONArray args, CallbackContext callbackContext) {
+  protected void unsubscribe(JSONArray args, CallbackContext callbackContext) {
     if (this.bandClient.getConnectionState() == ConnectionState.CONNECTED) {
       try {
         if (args.getString(0).equals("HEART_RATE")) {
@@ -347,7 +347,7 @@ public class MSBandPlugin extends CordovaPlugin {
     }
   }
 
-  protected void isConnectedAction(JSONArray args, CallbackContext callbackContext) {
+  protected void isConnected(JSONArray args, CallbackContext callbackContext) {
     JSONObject obj = new JSONObject();
     addProperty(obj, "isConnected", this.bandClient.isConnected());
     callbackContext.success(obj);

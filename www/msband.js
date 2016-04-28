@@ -9,11 +9,11 @@ module.exports = {
   disconnect: function(successCallback, errorCallback) {
     cordova.exec(successCallback, errorCallback, service, "disconnect", []);
   },
-  getContactState: function(successCallback, errorCallback) {
-    cordova.exec(successCallback, errorCallback, service, "getContactState", []);
+  contact: function(successCallback, errorCallback) {
+    cordova.exec(successCallback, errorCallback, service, "contact", []);
   },
-  getConsent: function(successCallback, errorCallback) {
-    cordova.exec(successCallback, errorCallback, service, "getConsent", []);
+  consent: function(successCallback, errorCallback) {
+    cordova.exec(successCallback, errorCallback, service, "consent", []);
   },
   subscribe: function(successCallback, errorCallback, type) {
     cordova.exec(successCallback, errorCallback, service, "subscribe", [type])
