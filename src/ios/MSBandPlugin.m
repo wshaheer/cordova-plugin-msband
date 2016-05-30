@@ -88,15 +88,15 @@
       NSMutableDictionary *returnObj = [NSMutableDictionary dictionaryWithCapacity:1];
       if (contactData.wornState == 0)
       {
-        [returnObj setValue:@"NOT_WORN" forKey:@"state"];
+        [returnObj setValue:@"NOT_WORN" forKey:@"status"];
       }
       else if (contactData.wornState == 1)
       {
-        [returnObj setValue:@"WORN" forKey:@"state"];
+        [returnObj setValue:@"WORN" forKey:@"status"];
       }
       else
       {
-        [returnObj setValue:@"UNKNOWN" forKey:@"state"];
+        [returnObj setValue:@"UNKNOWN" forKey:@"status"];
       }
 
       CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:returnObj];
