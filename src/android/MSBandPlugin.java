@@ -179,7 +179,7 @@ public class MSBandPlugin extends CordovaPlugin {
           public void onBandContactChanged(BandContactEvent event) {
             try {
               JSONObject obj = new JSONObject();
-              addProperty(obj, "state", event.getContactState().name().toString());
+              addProperty(obj, "status", event.getContactState().name().toString());
               PluginResult result = new PluginResult(PluginResult.Status.OK, obj);
               result.setKeepCallback(true);
               callbackContext.sendPluginResult(result);
