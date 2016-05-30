@@ -338,10 +338,10 @@ public class MSBandPlugin extends CordovaPlugin {
           addProperty(obj, "sensor", "SkinTemperatureSensor");
           addProperty(obj, "status", "unsubscribed");
           callbackContext.success(obj);
-        } else if (args.getString(0).equals("CONTACT_STATE")) {
+        } else if (args.getString(0).equals("BAND_CONTACT")) {
           this.bandClient.getSensorManager().unregisterContactEventListeners();
           JSONObject obj = new JSONObject();
-          addProperty(obj, "sensor", "ContactSensor");
+          addProperty(obj, "sensor", "BandContactSensor");
           addProperty(obj, "status", "unsubscribed");
           callbackContext.success(obj);
         }
