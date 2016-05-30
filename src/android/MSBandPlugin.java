@@ -158,6 +158,7 @@ public class MSBandPlugin extends CordovaPlugin {
   protected void disconnect(JSONArray args, CallbackContext callbackContext) {
     JSONObject obj = new JSONObject();
     if (this.bandClient.getConnectionState() == ConnectionState.CONNECTED) {
+      this.bandClient.unregisterConnectionCallback();
       try {
         this.bandClient.disconnect().await();
         addProperty(obj, "name", this.device.getName());
