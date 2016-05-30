@@ -231,6 +231,14 @@
       [pluginResult setKeepCallbackAsBool:NO];
       [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
     }
+    else if ([event compare:@"BAND_CONTACT"] == 0)
+    {
+      [self.client.sensorManager stopBandContactUpdatesErrorRef:nil];
+      NSDictionary *returnObj = [NSDictionary dictionaryWithObjectsAndKeys: @"BandContactSensor", @"sensor", @"unsubscribed", @"status", nil];
+      CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:returnObj];
+      [pluginResult setKeepCallbackAsBool:NO];
+      [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+    }
   }
 }
 
