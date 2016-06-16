@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-msband",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Plugin for Microsoft Band",
   "cordova": {
     "id": "cordova-plugin-msband",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wshaheer/cordova-plugin-msband.git"
+    "url": "https://github.com/wshaheer/cordova-plugin-msband.git"
   },
   "keywords": [
     "cordova",

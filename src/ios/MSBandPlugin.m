@@ -73,7 +73,7 @@
   if (self.client.isDeviceConnected)
   {
     [[MSBClientManager sharedManager] cancelClientConnection:self.client];
-    NSDictionary *returnObj = [NSDictionary dictionaryWithObjectsAndKeys: [NSString stringWithString:self.client.name], @"name", [NSString stringWithString:[self.client.connectionIdentifier UUIDString]], @"address", nil];
+    NSDictionary *returnObj = [NSDictionary dictionaryWithObjectsAndKeys: [NSString stringWithString:self.client.name], @"name", [NSString stringWithString:[self.client.connectionIdentifier UUIDString]], @"address", @"DISCONNECTED", @"status", nil];
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:returnObj];
     [pluginResult setKeepCallbackAsBool:NO];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
@@ -186,6 +186,28 @@
 
         CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:returnObj];
         [pluginResult setKeepCallbackAsBool:YES];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+      }];
+    }
+    else if ([event compare:@"BAND_CONTACT"] == 0)
+    {
+      [self.client.sensorManager startBandContactUpdatesToQueue:nil errorRef:nil withHandler:^(MSBSensorBandContactData *contactData, NSError *error) {
+        NSMutableDictionary *returnObj = [NSMutableDictionary dictionaryWithCapacity:1];
+        if (contactData.wornState == 0)
+        {
+          [returnObj setValue:@"NOT_WORN" forKey:@"status"];
+        }
+        else if (contactData.wornState == 1)
+        {
+          [returnObj setValue:@"WORN" forKey:@"status"];
+        }
+        else
+        {
+          [returnObj setValue:@"UNKNOWN" forKey:@"status"];
+        }
+
+        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:returnObj];
+        [pluginResult setKeepCallbackAsBool:[NSNumber numberWithBool:YES]];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
       }];
     }

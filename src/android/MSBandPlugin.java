@@ -150,24 +150,41 @@ public class MSBandPlugin extends CordovaPlugin {
       }
     } catch(InterruptedException e) {
       // handle exception
+      JSONObject obj = new JSONObject();
+      addProperty(obj, "error", "interruptedException");
+      addProperty(obj, "message", e.getMessage());
+      callbackContext.error(obj);
     } catch(BandException e) {
       // handle exception
+      JSONObject obj = new JSONObject();
+      addProperty(obj, "error", "bandException");
+      addProperty(obj, "message", e.getMessage());
+      callbackContext.error(obj);
     }
   }
 
   protected void disconnect(JSONArray args, CallbackContext callbackContext) {
-    JSONObject obj = new JSONObject();
     if (this.bandClient.getConnectionState() == ConnectionState.CONNECTED) {
       this.bandClient.unregisterConnectionCallback();
+      this.bandClient.disconnect().await();
       try {
-        this.bandClient.disconnect().await();
+        JSONObject obj = new JSONObject();
         addProperty(obj, "name", this.device.getName());
         addProperty(obj, "address", this.device.getMacAddress());
+        addProperty(obj, "status", "DISCONNECTED");
         callbackContext.success(obj);
-      } catch (InterruptedException e) {
+      } catch(InterruptedException e) {
         // handle exception
-      } catch (BandException e) {
+        JSONObject obj = new JSONObject();
+        addProperty(obj, "error", "interruptedException");
+        addProperty(obj, "message", e.getMessage());
+        callbackContext.error(obj);
+      } catch(BandException e) {
         // handle exception
+        JSONObject obj = new JSONObject();
+        addProperty(obj, "error", "bandException");
+        addProperty(obj, "message", e.getMessage());
+        callbackContext.error(obj);
       }
     }
   }
@@ -186,11 +203,19 @@ public class MSBandPlugin extends CordovaPlugin {
               callbackContext.sendPluginResult(result);
             } catch (Exception e) {
               // handle exception
+              JSONObject obj = new JSONObject();
+              addProperty(obj, "error", "unknownException");
+              addProperty(obj, "message", e.getMessage());
+              callbackContext.error(obj);
             }
           }
         });
       } catch (BandIOException e) {
         // handle exception
+        JSONObject obj = new JSONObject();
+        addProperty(obj, "error", "bandIOException");
+        addProperty(obj, "message", e.getMessage());
+        callbackContext.error(obj);
       }
     }
   }
@@ -301,13 +326,50 @@ public class MSBandPlugin extends CordovaPlugin {
               }
             }
           });
+        } else if (args.getString(0).equals("BAND_CONTACT")) {
+          this.bandClient.getSensorManager().registerContactEventListener(new BandContactEventListener() {
+            @Override
+            public void onBandContactChanged(BandContactEvent event) {
+              try {
+                JSONObject obj = new JSONObject();
+                addProperty(obj, "status", event.getContactState().name().toString());
+                PluginResult result = new PluginResult(PluginResult.Status.OK, obj);
+                result.setKeepCallback(true);
+                callbackContext.sendPluginResult(result);
+              } catch (Exception e) {
+                // handle exception
+                JSONObject obj = new JSONObject();
+                addProperty(obj, "error", "unknownException");
+                addProperty(obj, "message", e.getMessage());
+                callbackContext.error(obj);
+              }
+            }
+          });
         }
-      } catch (InvalidBandVersionException e){
+      } catch (InvalidBandVersionException e) {
         // handle exception
+        JSONObject obj = new JSONObject();
+        addProperty(obj, "error", "invalidBandVersionException");
+        addProperty(obj, "message", e.getMessage());
+        callbackContext.error(obj);
+      } catch (BandIOException e) {
+        // handle exception
+        JSONObject obj = new JSONObject();
+        addProperty(obj, "error", "bandIOException");
+        addProperty(obj, "message", e.getMessage());
+        callbackContext.error(obj);
       } catch (BandException e) {
         // handle exception
+        JSONObject obj = new JSONObject();
+        addProperty(obj, "error", "bandException");
+        addProperty(obj, "message", e.getMessage());
+        callbackContext.error(obj);
       } catch (JSONException e) {
         // handle exception
+        JSONObject obj = new JSONObject();
+        addProperty(obj, "error", "jsonException");
+        addProperty(obj, "message", e.getMessage());
+        callbackContext.error(obj);
       }
     }
   }
@@ -348,8 +410,16 @@ public class MSBandPlugin extends CordovaPlugin {
         }
       } catch (BandException e) {
         // handle exception
+        JSONObject obj = new JSONObject();
+        addProperty(obj, "error", "bandException");
+        addProperty(obj, "message", e.getMessage());
+        callbackContext.error(obj);
       } catch (JSONException e) {
         // handle exception
+        JSONObject obj = new JSONObject();
+        addProperty(obj, "error", "jsonException");
+        addProperty(obj, "message", e.getMessage());
+        callbackContext.error(obj);
       }
     }
   }
