@@ -164,28 +164,27 @@ public class MSBandPlugin extends CordovaPlugin {
   }
 
   protected void disconnect(JSONArray args, CallbackContext callbackContext) {
-    if (this.bandClient.getConnectionState() == ConnectionState.CONNECTED) {
-      this.bandClient.unregisterConnectionCallback();
+    this.bandClient.unregisterConnectionCallback();
+    try {
       this.bandClient.disconnect().await();
-      try {
-        JSONObject obj = new JSONObject();
-        addProperty(obj, "name", this.device.getName());
-        addProperty(obj, "address", this.device.getMacAddress());
-        addProperty(obj, "status", "DISCONNECTED");
-        callbackContext.success(obj);
-      } catch(InterruptedException e) {
-        // handle exception
-        JSONObject obj = new JSONObject();
-        addProperty(obj, "error", "interruptedException");
-        addProperty(obj, "message", e.getMessage());
-        callbackContext.error(obj);
-      } catch(BandException e) {
-        // handle exception
-        JSONObject obj = new JSONObject();
-        addProperty(obj, "error", "bandException");
-        addProperty(obj, "message", e.getMessage());
-        callbackContext.error(obj);
-      }
+
+      JSONObject obj = new JSONObject();
+      addProperty(obj, "name", this.device.getName());
+      addProperty(obj, "address", this.device.getMacAddress());
+      addProperty(obj, "status", this.bandClient.getConnectionState().name().toString());
+      callbackContext.success(obj);
+    } catch(InterruptedException e) {
+      // handle exception
+      JSONObject obj = new JSONObject();
+      addProperty(obj, "error", "interruptedException");
+      addProperty(obj, "message", e.getMessage());
+      callbackContext.error(obj);
+    } catch(BandException e) {
+      // handle exception
+      JSONObject obj = new JSONObject();
+      addProperty(obj, "error", "bandException");
+      addProperty(obj, "message", e.getMessage());
+      callbackContext.error(obj);
     }
   }
 
