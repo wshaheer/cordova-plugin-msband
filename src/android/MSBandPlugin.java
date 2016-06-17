@@ -143,7 +143,7 @@ public class MSBandPlugin extends CordovaPlugin {
     try {
       this.bandClient.connect().await();
 
-      if (this.bandClient.getConnectionState != ConnectionState.CONNECTED) {
+      if (this.bandClient.getConnectionState() != ConnectionState.CONNECTED) {
         JSONObject obj = new JSONObject();
         addProperty(obj, "name", "notConnected");
         addProperty(obj, "message", "Could not connect to device");
