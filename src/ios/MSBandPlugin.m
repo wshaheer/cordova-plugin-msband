@@ -39,8 +39,11 @@
 
 - (void) connect:(CDVInvokedUrlCommand *)command
 {
-  self.connectCallbackId = [NSString stringWithString:command.callbackId];
-  [[MSBClientManager sharedManager] connectClient:_client];
+  if (!self.client.isDeviceConnected)
+  {
+    self.connectCallbackId = [NSString stringWithString:command.callbackId];
+    [[MSBClientManager sharedManager] connectClient:_client];
+  }
 }
 
 - (void) clientManager:(MSBClientManager *)manager clientDidConnect:(MSBClient *)client

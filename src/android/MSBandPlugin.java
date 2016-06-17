@@ -128,63 +128,69 @@ public class MSBandPlugin extends CordovaPlugin {
   }
 
   protected void connect(JSONArray args, final CallbackContext callbackContext) {
-    this.bandClient.registerConnectionCallback(new BandConnectionCallback() {
-      @Override
-      public void onStateChanged(ConnectionState state) {
+    if (!this.bandClient.isConnected()) {
+      this.bandClient.registerConnectionCallback(new BandConnectionCallback() {
+        @Override
+        public void onStateChanged(ConnectionState state) {
+          JSONObject obj = new JSONObject();
+          addProperty(obj, "name", MSBandPlugin.this.device.getName());
+          addProperty(obj, "address", MSBandPlugin.this.device.getMacAddress());
+          addProperty(obj, "status", state.name().toString());
+          PluginResult result = new PluginResult(PluginResult.Status.OK, obj);
+          result.setKeepCallback(true);
+          callbackContext.sendPluginResult(result);
+        }
+      });
+      try {
+        this.bandClient.connect().await();
+        if (this.bandClient.getConnectionState() != ConnectionState.CONNECTED) {
+          JSONObject obj = new JSONObject();
+          addProperty(obj, "error", "notConnected");
+          addProperty(obj, "message", "Could not connect to device");
+          callbackContext.error(obj);
+        }
+      } catch(InterruptedException e) {
+        // handle exception
         JSONObject obj = new JSONObject();
-        addProperty(obj, "name", MSBandPlugin.this.device.getName());
-        addProperty(obj, "address", MSBandPlugin.this.device.getMacAddress());
-        addProperty(obj, "status", state.name().toString());
-        PluginResult result = new PluginResult(PluginResult.Status.OK, obj);
-        result.setKeepCallback(true);
-        callbackContext.sendPluginResult(result);
-      }
-    });
-    try {
-      this.bandClient.connect().await();
-      if (this.bandClient.getConnectionState() != ConnectionState.CONNECTED) {
+        addProperty(obj, "error", "interruptedException");
+        addProperty(obj, "message", e.getMessage());
+        callbackContext.error(obj);
+      } catch(BandException e) {
+        // handle exception
         JSONObject obj = new JSONObject();
-        addProperty(obj, "error", "notConnected");
-        addProperty(obj, "message", "Could not connect to device");
+        addProperty(obj, "error", "bandException");
+        addProperty(obj, "message", e.getMessage());
         callbackContext.error(obj);
       }
-    } catch(InterruptedException e) {
-      // handle exception
-      JSONObject obj = new JSONObject();
-      addProperty(obj, "error", "interruptedException");
-      addProperty(obj, "message", e.getMessage());
-      callbackContext.error(obj);
-    } catch(BandException e) {
-      // handle exception
-      JSONObject obj = new JSONObject();
-      addProperty(obj, "error", "bandException");
-      addProperty(obj, "message", e.getMessage());
-      callbackContext.error(obj);
     }
   }
 
   protected void disconnect(JSONArray args, CallbackContext callbackContext) {
-    this.bandClient.unregisterConnectionCallback();
-    try {
-      this.bandClient.disconnect().await();
+    if (this.bandClient.isConnected()) {
+      this.bandClient.unregisterConnectionCallback();
+      try {
+        this.bandClient.disconnect().await();
 
-      JSONObject obj = new JSONObject();
-      addProperty(obj, "name", this.device.getName());
-      addProperty(obj, "address", this.device.getMacAddress());
-      addProperty(obj, "status", this.bandClient.getConnectionState().name().toString());
-      callbackContext.success(obj);
-    } catch(InterruptedException e) {
-      // handle exception
-      JSONObject obj = new JSONObject();
-      addProperty(obj, "error", "interruptedException");
-      addProperty(obj, "message", e.getMessage());
-      callbackContext.error(obj);
-    } catch(BandException e) {
-      // handle exception
-      JSONObject obj = new JSONObject();
-      addProperty(obj, "error", "bandException");
-      addProperty(obj, "message", e.getMessage());
-      callbackContext.error(obj);
+        if (this.bandClient.getConnectionState() == ConnectionState.UNBOUND) {
+          JSONObject obj = new JSONObject();
+          addProperty(obj, "name", this.device.getName());
+          addProperty(obj, "address", this.device.getMacAddress());
+          addProperty(obj, "status", this.bandClient.getConnectionState().name().toString());
+          callbackContext.success(obj);
+        }
+      } catch(InterruptedException e) {
+        // handle exception
+        JSONObject obj = new JSONObject();
+        addProperty(obj, "error", "interruptedException");
+        addProperty(obj, "message", e.getMessage());
+        callbackContext.error(obj);
+      } catch(BandException e) {
+        // handle exception
+        JSONObject obj = new JSONObject();
+        addProperty(obj, "error", "bandException");
+        addProperty(obj, "message", e.getMessage());
+        callbackContext.error(obj);
+      }
     }
   }
 
