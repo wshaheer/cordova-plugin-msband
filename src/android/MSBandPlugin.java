@@ -143,7 +143,9 @@ public class MSBandPlugin extends CordovaPlugin {
       });
       try {
         this.bandClient.connect().await();
-        if (this.bandClient.getConnectionState() != ConnectionState.CONNECTED) {
+        
+        if (!this.bandClient.isConnected()) {
+          this.bandClient.unregisterConnectionCallback();
           JSONObject obj = new JSONObject();
           addProperty(obj, "error", "notConnected");
           addProperty(obj, "message", "Could not connect to device");
@@ -171,12 +173,17 @@ public class MSBandPlugin extends CordovaPlugin {
       try {
         this.bandClient.disconnect().await();
 
-        if (this.bandClient.getConnectionState() == ConnectionState.UNBOUND) {
+        if (!this.bandClient.isConnected()) {
           JSONObject obj = new JSONObject();
           addProperty(obj, "name", this.device.getName());
           addProperty(obj, "address", this.device.getMacAddress());
           addProperty(obj, "status", this.bandClient.getConnectionState().name().toString());
           callbackContext.success(obj);
+        } else {
+          JSONObject obj = new JSONObject();
+          addProperty(obj, "error", "notDisconnected");
+          addProperty(obj, "message", "Could not disconnect from device");
+          callbackContext.error(obj);
         }
       } catch(InterruptedException e) {
         // handle exception
