@@ -39,11 +39,8 @@
 
 - (void) connect:(CDVInvokedUrlCommand *)command
 {
-  if (!self.client.isDeviceConnected)
-  {
-    self.connectCallbackId = [NSString stringWithString:command.callbackId];
-    [[MSBClientManager sharedManager] connectClient:_client];
-  }
+  self.connectCallbackId = [NSString stringWithString:command.callbackId];
+  [[MSBClientManager sharedManager] connectClient:_client];
 }
 
 - (void) clientManager:(MSBClientManager *)manager clientDidConnect:(MSBClient *)client
@@ -73,14 +70,11 @@
 
 - (void) disconnect:(CDVInvokedUrlCommand *)command
 {
-  if (self.client.isDeviceConnected)
-  {
-    [[MSBClientManager sharedManager] cancelClientConnection:self.client];
-    NSDictionary *returnObj = [NSDictionary dictionaryWithObjectsAndKeys: [NSString stringWithString:self.client.name], @"name", [NSString stringWithString:[self.client.connectionIdentifier UUIDString]], @"address", @"DISCONNECTED", @"status", nil];
-    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:returnObj];
-    [pluginResult setKeepCallbackAsBool:NO];
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-  }
+  [[MSBClientManager sharedManager] cancelClientConnection:self.client];
+  NSDictionary *returnObj = [NSDictionary dictionaryWithObjectsAndKeys: [NSString stringWithString:self.client.name], @"name", [NSString stringWithString:[self.client.connectionIdentifier UUIDString]], @"address", @"DISCONNECTED", @"status", nil];
+  CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:returnObj];
+  [pluginResult setKeepCallbackAsBool:NO];
+  [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 - (void) contact:(CDVInvokedUrlCommand *)command
