@@ -17,20 +17,20 @@
   NSDictionary *returnObj = nil;
   CDVPluginResult *pluginResult = nil;
 
-  [MSBClientManager sharedManager].delegate = self;
+  [[MSBClientManager sharedManager] setDelegate:self];
   NSArray *attachedClients = [[MSBClientManager sharedManager] attachedClients];
 
   _client = [attachedClients firstObject];
 
-  if (_client)
-  {
-    returnObj = [NSDictionary dictionaryWithObjectsAndKeys: [NSString stringWithString:[_client name]], @"name", [NSString stringWithString:[[_client connectionIdentifier] UUIDString]], @"address", nil];
-    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:returnObj];
-  }
-  else
+  if (_client == nil)
   {
     returnObj = [NSDictionary dictionaryWithObjectsAndKeys: @"notInitialized", @"error", @"No paired devices found", @"message", nil];
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:returnObj];
+  }
+  else
+  {
+    returnObj = [NSDictionary dictionaryWithObjectsAndKeys: [NSString stringWithString:[_client name]], @"name", [NSString stringWithString:[[_client connectionIdentifier] UUIDString]], @"address", nil];
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:returnObj];
   }
 
   [pluginResult setKeepCallbackAsBool:NO];
