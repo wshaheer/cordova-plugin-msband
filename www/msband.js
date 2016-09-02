@@ -12,10 +12,7 @@ module.exports = {
     consent: function (successCallback, errorCallback) {
         cordova.exec(successCallback, errorCallback, service, "consent", []);
     },
-    subscribe: function (successCallback, errorCallback, type) {
-        cordova.exec(successCallback, errorCallback, service, "subscribe", [type])
-    },
-    subscribeWithArg: function (successCallback, errorCallback, type, arg) {
+    subscribe: function (successCallback, errorCallback, type, arg) {
         cordova.exec(successCallback, errorCallback, service, "subscribe", [type, arg])
     },
     unsubscribe: function (successCallback, errorCallback, type) {
